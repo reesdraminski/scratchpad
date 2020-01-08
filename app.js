@@ -1,16 +1,15 @@
 const notesEl = document.getElementById("notepad"); // notepad DOM reference
 const DELAY = 300; // the input delay time
 const TAB = "     "; // 5 space tab
-let timeout = 0;
+
+// attach key listener for shortcut keys
+bindShortcuts();
 
 // if localStorage is available
 if (typeof(Storage) !== "undefined") {
     // get the notes from localStorage and put it into notes textarea
     notesEl.innerHTML = localStorage.getItem("notes");
 
-    // attach key listener for shortcut keys
-    bindShortcuts();
-                
     // Scroll to top of textarea delay 1ms to allow value to be set
     setTimeout(() => {
         notesEl.scrollTop = 0;
@@ -22,10 +21,16 @@ if (typeof(Storage) !== "undefined") {
 
 function bindShortcuts() {
     notesEl.addEventListener('click', (e) => {
-        if (e.srcElement) {
-            if (e.srcElement.tagName == "A") {
-                console.log("i'm a link!");
-            }
+        // if the user clicked on a link
+        if (e.target.tagName == "A") {
+            // open link in new window
+            e.srcElement.target = "_blank";
+
+            // make the notepad uneditable so the link can get clicked
+            notesEl.contentEditable = false;
+
+            // delay making the notepad editable to allow for link click 
+            setTimeout(() => { notesEl.contentEditable = true; });
         }
     });
 
@@ -53,11 +58,18 @@ function bindShortcuts() {
             // refocus onto notepad
             notesEl.focus();
         }
+        // Ctrl/Cmd + U
         else if (e.metaKey && e.key === "u") {
             document.execCommand("underline");
         }
+        // Ctrl/Cmd + K
         else if (e.metaKey && e.key === "k") {
             document.execCommand("createLink", false, getSelectionText());
+        }
+        // Ctrl/Cmd + Shift + L
+        else if (e.metaKey && e.shiftKey && e.key === "l") {
+            e.preventDefault();
+            document.execCommand("insertHTML", false, "<hr/>");
         }
     });
 }
@@ -79,6 +91,7 @@ function getSelectionText() {
 * On textarea input (typing), delay the input by constant delay time to 
 * prevent spamming localStorage.
 */
+let timeout = 0;
 function autosave() {
     notesEl.addEventListener("input", () => {
         // if new typing, clear previous delay
