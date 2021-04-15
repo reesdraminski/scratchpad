@@ -62,7 +62,7 @@ section[role="main"] {
     font-family: sans-serif;
     font-size: 15px;
 
-    white-space: pre;
+    white-space: pre-wrap;
 }
 
 /* get rid of the contenteditable focus border */
