@@ -20,7 +20,10 @@ let timeout = 0;
     if (!data.notes)
     {
         // create a blank note and set it as last active
-        data.notes = [""];
+        data.notes = [{
+            content: "",
+            title: "Note #1",
+        }];
         data.activeIndex = 0;
     }
 
@@ -33,7 +36,10 @@ let timeout = 0;
         e.preventDefault();
 
         // add new blank note
-        data.notes.push("");
+        data.notes.push({
+            content: "",
+            title: `Note #${data.notes.length + 1}`
+        });
 
         // show the newly created note
         data.activeIndex = data.notes.length - 1;
@@ -53,7 +59,7 @@ let timeout = 0;
         // set save to localStorage to constant delay time
         timeout = setTimeout(() => {
             // update the note content of the active note
-            data.notes[data.activeIndex] = notesEl.innerHTML;
+            data.notes[data.activeIndex].content = notesEl.innerHTML;
 
             // save the updated note state
             saveApplicationState();
@@ -66,7 +72,7 @@ let timeout = 0;
  */
 function renderNotes() {
     // show the currently active note
-    notesEl.innerHTML = data.notes[data.activeIndex];
+    notesEl.innerHTML = data.notes[data.activeIndex]?.content;
 
     // delete the note tabs so they can be re-rendered
     [...nav.children]
@@ -101,7 +107,7 @@ function renderNotes() {
             // create the tab title text link element
             const title = document.createElement("a");
             title.classList.add("nav-link");
-            title.textContent = `Note #${i + 1}`;
+            title.textContent = x.title;
 
             // show the last active tab as active
             if (i == data.activeIndex) 
@@ -119,8 +125,9 @@ function renderNotes() {
                 // capture only the close button click and not tab click
                 e.stopPropagation();
 
-                // if the current tab is the last tab, but not the only tab, shift activeIndex left by one
-                if (i == data.activeIndex && i == data.notes.length - 1 && i !== 0)
+                // shift left if closing a tab before the current tab OR
+                // if closing the current tab that is non-first
+                if (i < data.activeIndex || i == data.activeIndex && i !== 0)
                 {
                     data.activeIndex--;
                 }
@@ -132,7 +139,10 @@ function renderNotes() {
                 if (data.notes.length === 0)
                 {
                     // add a blank note
-                    data.notes.push("");
+                    data.notes.push({
+                        content: "",
+                        title: "Note #1"
+                    });
                 }
 
                 // save state since notes data changed
