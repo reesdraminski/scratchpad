@@ -183,18 +183,18 @@ function bindShortcuts() {
     }
 
     notesEl.onkeydown = async (e) => {
-        if (e.key == " ")
-        {
-            const lineEl = window.getSelection().focusNode;
-            const text = lineEl.textContent.trim();
+        // if (e.key == " ")
+        // {
+        //     const lineEl = window.getSelection().focusNode;
+        //     const text = lineEl.textContent.trim();
 
-            if (text.substring(text.length - 2) == "[]")
-            {
-                const oldHTML = lineEl.parentNode.innerHTML;
+        //     if (text.substring(text.length - 2) == "[]")
+        //     {
+        //         const oldHTML = lineEl.parentNode.innerHTML;
 
-                lineEl.parentNode.innerHTML = oldHTML.slice(0, oldHTML.length - 2);
-            }
-        }
+        //         lineEl.parentNode.innerHTML = oldHTML.slice(0, oldHTML.length - 2);
+        //     }
+        // }
 
         // Tab
         if (e.key == "Tab") 
