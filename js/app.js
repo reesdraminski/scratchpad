@@ -104,6 +104,24 @@ function renderNotes() {
                 }
             }
 
+            tab.ondblclick = () => {
+                // prompt the user for a title
+                const title = prompt("What would you like to title this note?");
+
+                // if the user actually entered a title
+                if (title)
+                {
+                    // update the title
+                    data.notes[i].title = title;
+
+                    // save the updated title
+                    saveApplicationState();
+
+                    // re-render the note tabs
+                    renderNotes();
+                }
+            }
+
             // create the tab title text link element
             const title = document.createElement("a");
             title.classList.add("nav-link");
@@ -160,6 +178,7 @@ function renderNotes() {
 
     // scroll to top of textarea delay 1ms to allow value to be set
     setTimeout(() => notesEl.scrollTop = 0, 1);
+
     notesEl.focus();
 }
 
@@ -183,19 +202,6 @@ function bindShortcuts() {
     }
 
     notesEl.onkeydown = async (e) => {
-        // if (e.key == " ")
-        // {
-        //     const lineEl = window.getSelection().focusNode;
-        //     const text = lineEl.textContent.trim();
-
-        //     if (text.substring(text.length - 2) == "[]")
-        //     {
-        //         const oldHTML = lineEl.parentNode.innerHTML;
-
-        //         lineEl.parentNode.innerHTML = oldHTML.slice(0, oldHTML.length - 2);
-        //     }
-        // }
-
         // Tab
         if (e.key == "Tab") 
         {
